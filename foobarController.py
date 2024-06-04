@@ -1,11 +1,11 @@
-from foobarhttp import FoobarRemote
+from pyfoobar2k import FoobarRemote
 import requests
 
 
 class FoobarController:
-
-    def __init__(self) -> None:
-        self.foobarRemote = FoobarRemote("localhost")
+    def __init__(self, foorbarURL='localhost') -> None:
+        self.url = foorbarURL
+        self.foobarRemote = FoobarRemote(self.url)
         self.state = self.foobarRemote.state()
         self.volumeIncrement = 5
 
@@ -26,12 +26,12 @@ class FoobarController:
         return self.foobarRemote.state()
     
     def volumeUp(self):
-        self.state = self.foobarRemote()
+        self.state = self.foobarRemote.state()
         self.foobarRemote.cmd("Volume", int(self.state['volume']) + self.volumeIncrement)
         return self.foobarRemote.state()
 
     def volumeDown(self):
-        self.state = self.foobarRemote()
+        self.state = self.foobarRemote.state()
         self.foobarRemote.cmd("Volume", int(self.state['volume']) - self.volumeIncrement)
         return self.foobarRemote.state()
     
@@ -41,7 +41,7 @@ class FoobarController:
 
     def getAlbumArt(self):
         self.state = self.foobarRemote.state()
-        url = 'http://localhost:8888/' + self.state['albumArt']
+        url = 'http://' + self.url + ':8888/' + self.state['albumArt']
         try:
             # Send a GET request to the image URL
             response = requests.get(url)

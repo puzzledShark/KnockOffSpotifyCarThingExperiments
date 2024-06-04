@@ -1,8 +1,9 @@
 import serial
 import threading
+import time
 
 # Configure the serial port
-serial_port = "COM3"  # Replace "COM3" with the appropriate COM port for your Pico
+serial_port = "COM3"  # Replace "COMx" with the appropriate COM port for your Pico
 baud_rate = 9600  # Match this with the baud rate in your MicroPython script
 
 # Open the serial port
@@ -11,13 +12,9 @@ ser = serial.Serial(serial_port, baud_rate)
 # Function to continuously read from the serial port in a separate thread
 def serial_reader():
     while not exit_event.is_set():
-        try:
-            line = ser.readline().decode('utf-8').strip()
-            if line:
-                print(line)
-        except UnicodeDecodeError:
-            # Handle UnicodeDecodeError if non-UTF-8 data is received
-            pass
+        line = ser.readline().decode('utf-8').strip()
+        if line:
+            print(line)
 
 try:
     # Create an event to signal the thread to exit
@@ -29,7 +26,7 @@ try:
 
     # Wait for KeyboardInterrupt
     while True:
-        pass  # Keep the main thread running until KeyboardInterrupt
+        time.sleep(1)  # You can replace this with any other operation
 
 except KeyboardInterrupt:
     pass  # Handle KeyboardInterrupt outside the main loop
