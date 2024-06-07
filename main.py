@@ -2,7 +2,7 @@ import serial
 from serialReader import SerialReader
 import time
 import yaml
-from foobarController import FoobarController
+from foobarControllerV2 import FoobarController
 
 with open('config.yaml', 'r') as config_file:
     config = yaml.safe_load(config_file)
