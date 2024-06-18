@@ -16,11 +16,16 @@ class SerialReader(threading.Thread):
         while self.running:
             if self.uart.in_waiting > 0:
                 data = self.uart.readline().strip()
+                try:
+                    parsedData  = data.decode('utf-8', errors='ignore')
                 #print("Received from device:", data.decode())
-                self.commandHandler(data.decode())
+                    self.commandHandler(parsedData)
+                except UnicodeDecodeError as e:
+                    print(f"Decoding error: {e}")
+                    print(f"Raw Data: {data}")
                 
     def commandHandler(self, command):
-        print("(" , command , ")")
+        #print(command)
         if(command == "Play"):
             print("play")
             self.foobarController.playpause()
@@ -36,7 +41,10 @@ class SerialReader(threading.Thread):
         elif(command == "VolumeDown"):
             print("Dn")
             self.foobarController.volumeDown()
+        else:
+            print(command)
 
 
     def stop(self):
+        print("Stopping Reader")
         self.running = False
